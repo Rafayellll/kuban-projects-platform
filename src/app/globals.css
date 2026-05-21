@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-50:  #ECF8F2;
+  --color-brand-100: #D2EFE0;
+  --color-brand-200: #A6DEC2;
+  --color-brand-300: #6FC79E;
+  --color-brand-400: #3DAE78;
+  --color-brand-500: #1A8B59;
+  --color-brand-600: #0E6E4E;
+  --color-brand-700: #0B583F;
+  --color-brand-800: #094632;
+  --color-brand-900: #06382A;
+
+  --color-ochre-50:  #FFF8EC;
+  --color-ochre-100: #FFEDC9;
+  --color-ochre-200: #FCDC95;
+  --color-ochre-300: #F6C861;
+  --color-ochre-400: #EFB13E;
+  --color-ochre-500: #E8A23B;
+  --color-ochre-600: #C7821B;
+  --color-ochre-700: #9B6312;
+  --color-ochre-800: #6F470D;
+  --color-ochre-900: #4A2F08;
+
+  --color-sea-50:  #ECF3FB;
+  --color-sea-200: #B0CBEC;
+  --color-sea-500: #2B6CB0;
+  --color-sea-700: #1E4F85;
+
+  --color-ink:    #102218;
+  --color-paper:  #FAFAF7;
+  --color-surface:#FFFFFF;
+  --color-muted:  #6B7765;
+  --color-line:   #E5E7E1;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
+
+/* Decorative grid */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(14, 110, 78, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 110, 78, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Subtle textured background — kuban wheat field */
+.bg-kuban {
+  background:
+    radial-gradient(80rem 40rem at 80% -10%, rgba(232, 162, 59, 0.18), transparent 60%),
+    radial-gradient(70rem 40rem at -10% 110%, rgba(14, 110, 78, 0.18), transparent 60%),
+    var(--color-paper);
+}
+
+.shadow-soft {
+  box-shadow:
+    0 1px 0 rgba(15, 23, 42, 0.04),
+    0 6px 18px -8px rgba(14, 110, 78, 0.18);
+}
+
+/* Tight nice borders */
+.divide-line > * + * { border-top: 1px solid var(--color-line); }
+
+/* Typography helpers */
+.headline {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+/* Bot bubble */
+@keyframes pop-in {
+  0% { transform: scale(0.96); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: pop-in 200ms ease-out both; }
+
+/* Pulse dot */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+.dot-pulse { animation: pulse-dot 1.4s ease-in-out infinite; }
+
+/* Scrollbar in chat */
+.chat-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.chat-scroll::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 3px; }
+.chat-scroll::-webkit-scrollbar-track { background: transparent; }

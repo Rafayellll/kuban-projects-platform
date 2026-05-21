@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ПроКубань — платформа проектного входа в компании региона
 
-## Getting Started
+> Кейс «Платформа профессиональных бизнес-экскурсий и проектного входа в
+> компании региона». Блок **B — Проектная деятельность и мини-стажировки**.
+> Регион: **Краснодарский край**.
 
-First, run the development server:
+ПроКубань — это единая платформа, которая знакомит молодёжь региона с реальными
+компаниями через короткие командные проекты (мини-стажировки 2–8 недель) и
+бизнес-экскурсии. AI-ядро встроено в ключевые процессы: профориентация,
+матчинг проекта и студента, скоринг кандидатов, AI-куратор во время проекта.
+
+В отличие от федеральных job-сайтов и универсальных платформ профстажировок,
+ПроКубань делает ставку на **региональную специфику Кубани**: МСП края, вузы
+региона, выездные дни в компании, городскую логистику и формат «попробовать
+работу руками за 2–8 недель».
+
+---
+
+## Что в репозитории
+
+| Папка / файл | Что внутри |
+|---|---|
+| [`docs/01-analytics.md`](docs/01-analytics.md) | Полный конкурентный анализ, рынок, PEST, SWOT, гипотезы |
+| [`docs/02-bpmn.md`](docs/02-bpmn.md) | 7 BPMN-диаграмм ключевых процессов (Mermaid) |
+| [`docs/03-architecture.md`](docs/03-architecture.md) | Архитектура решения, AI-ядро, тех. стек, roadmap |
+| [`docs/charts/`](docs/charts) | 8 графиков (PNG): рынок, профориентация, позиционирование, воронка, SWOT-radar, PEST, метрики |
+| `src/app/` | Страницы Next.js App Router (главная, проекты, компании, профиль, дашборд, about) |
+| `src/components/` | UI-компоненты (Header, Footer, ProjectCard, CompanyCard, AssistantWidget) |
+| `src/app/api/` | API-роуты (AI-ассистент, AI-матчинг) |
+| `src/lib/data.ts` | Демо-данные: 10 компаний Кубани, 10 проектов, профиль студента |
+| `src/lib/ai.ts` | AI-ядро: матчинг (TF + бизнес-правила) + чат (OpenAI-совместимый API + офлайн-симулятор) |
+
+## Ключевые особенности MVP
+
+- **AI-матчинг проектов** — на главной и в каталоге проектов лента
+  сортируется по совпадению профиля и описания кейса. Каждое совпадение
+  сопровождается объяснением «почему именно этот».
+- **AI-ассистент** — плавающий чат-помощник (профориентация + матчинг +
+  поддержка) с дружелюбным интерфейсом. Доступен на всех страницах.
+- **Скоринг кандидатов** — кабинет компании показывает шортлист с AI-объяснением.
+- **Каталог проектов с фильтрами** — формат, уровень, город, поиск по
+  навыкам, переключение режима AI vs. обычная сортировка.
+- **Бренд Кубани** — тёмно-зелёный + охра + морской синий; крупная типографика;
+  обилие данных, а не «вода».
+
+## Запуск локально
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production-сборка и проверки
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # Next.js production build
+npm run lint    # ESLint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Подключение реальной LLM
 
-## Learn More
+AI-ассистент по умолчанию работает в офлайн-режиме (детерминированный
+симулятор, чтобы демо всегда работало). Для подключения настоящей модели
+задайте переменные окружения:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# OpenAI / OpenAI-совместимый эндпоинт (Groq, OpenRouter, локальный vLLM)
+OPENAI_API_KEY=sk-...
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4o-mini
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Для GigaChat / YandexGPT используются те же переменные — оба провайдера
+поддерживают OpenAI-совместимый интерфейс через стандартный прокси.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Стек
 
-## Deploy on Vercel
+- **Frontend / SSR**: Next.js 16 (App Router, Turbopack), React 19, TypeScript
+- **Стили**: Tailwind CSS v4
+- **AI**: OpenAI-совместимое API (GigaChat / YandexGPT / OpenAI), офлайн-симулятор
+- **В перспективе**: PostgreSQL + pgvector для семантического поиска,
+  Prisma ORM, GigaChat API, NextAuth (Госуслуги, VK ID), Telegram Mini App.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Подробная архитектура — [`docs/03-architecture.md`](docs/03-architecture.md).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Что нового / отличие от аналогов
+
+| Конкурент | Что есть у них | Что добавляем мы |
+|---|---|---|
+| HH.ru, SuperJob | Вакансии, отклики | Не нужно «искать вакансию» — мы предлагаем 2–8-недельную проектную пробу |
+| Профстажировки 2.0 | Список кейсов всей РФ | Локальный регион, AI-матчинг, командный формат, экскурсии |
+| Changellenge, Future Today | Хакатоны и стажировки в топ-компаниях | Локальные МСП Кубани, оплачиваемые мини-проекты |
+| Профилум, Билет в будущее | Профориентация в школе | Сквозной маршрут «профориентация → проект → найм» |
+| HR Talantix, VCV | AI-инструменты для HR | AI для **студента** (рекомендации + куратор), а не только для HR |
+
+## Команда / контекст
+
+Демо подготовлено в рамках кейса по проектной деятельности и мини-стажировкам
+для Краснодарского края.
